@@ -1,7 +1,7 @@
 $ResourceGroup = Read-Host "Please Enter Resource Group" 
 
-$VMList = Get-AzVM -ResourceGroupName $ResourceGroup -Verbose
-$NetworkResources = Get-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup -Verbose
+$VMList = Get-AzVM -ResourceGroupName $ResourceGroup
+$NetworkResources = Get-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup
 
 $VMs = foreach ($VM in $VMList) {
 
@@ -19,7 +19,7 @@ $VMs = foreach ($VM in $VMList) {
         Image         = $(if ($Image) {$Image.Substring($Image.LastIndexOf('/') + 1)})
         Status        = $VM.StatusCode
         DeployState   = $VM.ProvisioningState
-        PublicIP      = (Get-AzPublicIpAddress -ResourceGroupName $ResourceGroup -Name $NetIf | Select-Object IpAddress -Verbose).IpAddress
+        PublicIP      = (Get-AzPublicIpAddress -ResourceGroupName $ResourceGroup -Name $NetIf | Select-Object IpAddress).IpAddress
         NSG           = $(if ($NSG) {$NSG.Substring($NSG.LastIndexOf('/') + 1)})
     }    
 }
