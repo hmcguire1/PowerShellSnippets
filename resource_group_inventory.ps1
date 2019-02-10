@@ -5,7 +5,7 @@ $NetworkResources = Get-AzResourceGroupDeployment -ResourceGroupName $ResourceGr
 
 $VMs = foreach ($VM in $VMList) {
 
-    $NetIf = ($NetworkResources | Where-Object {$_.Parameters.virtualMachineName.Value -eq $VM.Name} | Select-Object -First 1).Parameters.publicIpAddressName.Value
+    $NetIp = ($NetworkResources | Where-Object {$_.Parameters.virtualMachineName.Value -eq $VM.Name} | Select-Object -First 1).Parameters.publicIpAddressName.Value
     $NSG = ($NetworkResources | Where-Object {$_.Parameters.virtualMachineName.Value -eq $VM.Name} | Select-Object -First 1).Parameters.networkSecurityGroupId.Value
     $Image = $VM.StorageProfile.ImageReference.Id
 
@@ -19,7 +19,7 @@ $VMs = foreach ($VM in $VMList) {
         Image         = $(if ($Image) {$Image.Substring($Image.LastIndexOf('/') + 1)})
         Status        = $VM.StatusCode
         DeployState   = $VM.ProvisioningState
-        PublicIP      = (Get-AzPublicIpAddress -ResourceGroupName $ResourceGroup -Name $NetIf | Select-Object IpAddress).IpAddress
+        PublicIP      = (Get-AzPublicIpAddress -ResourceGroupName $ResourceGroup -Name $NetIp | Select-Object IpAddress).IpAddress
         NSG           = $(if ($NSG) {$NSG.Substring($NSG.LastIndexOf('/') + 1)})
     }    
 }
