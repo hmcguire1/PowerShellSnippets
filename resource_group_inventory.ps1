@@ -1,10 +1,18 @@
 [CmdletBinding()]
-Param(                      
+Param(       
+    [Parameter(Mandatory = $true)]               
     [String]$ResourceGroup,
     [Switch]$json
 )
 
-if ($ResourceGroup) {
+Get-AzResourceGroup -Name $ResourceGroup -ErrorVariable notPresent -ErrorAction SilentlyContinue
+
+if ($notPresent) {
+    Write-Host "Possible Incorrect Resource Group. See Below Error.`n" -ForegroundColor Red
+    Write-Host $notPresent -ForegroundColor Yellow
+}
+
+else {
 
     $VMList = Get-AzVM -ResourceGroupName $ResourceGroup
     $NetworkResources = Get-AzResourceGroupDeployment -ResourceGroupName $ResourceGroup
@@ -35,8 +43,4 @@ if ($ResourceGroup) {
 
     else { $VMs | Sort-Object -Descending | Format-Table } 
 
-}
-
-else {
-    Write-Host "Please provide a Resource Group Name" -ForegroundColor Yellow
 }
