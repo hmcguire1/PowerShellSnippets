@@ -10,7 +10,7 @@ if($PSVersionTable.PSVersion -lt 5.0){
     break
 }
 
-if(!(Get-Module -ListAvailable -Name "Az")){
+if(((Get-Module -ListAvailable -Name Az.Compute, Az.Network, Az.Resources).count -ne 3)){
     $AzInstalled = $false
     do{
         Write-Host "Az Module Not Present. Installing from Powershell Gallery...." -ForegroundColor Yellow
@@ -20,7 +20,7 @@ if(!(Get-Module -ListAvailable -Name "Az")){
     while($AzInstalled = $false)
 }
 else{
-    Import-Module -Name Az
+    Import-Module -Name Az.Compute, Az.Resources, Az.Network
 }
 
 
