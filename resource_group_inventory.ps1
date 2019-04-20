@@ -5,6 +5,25 @@ Param(
     [Switch]$json
 )
 
+if($PSVersionTable.PSVersion -lt 5.0){
+    return "PowerShell Version is too old. Please update to 5.0 and later"
+    break
+}
+
+if(!(Get-Module -ListAvailable -Name "Az")){
+    $AzInstalled = $false
+    do{
+        Write-Host "Az Module Not Present. Installing from Powershell Gallery...." -ForegroundColor Yellow
+        Install-Module "Az" -Force
+        $AzInstalled = $true
+      }
+    while($AzInstalled = $false)
+}
+else{
+    Import-Module -Name Az
+}
+
+
 Get-AzResourceGroup -Name $ResourceGroup -ErrorVariable notPresent -ErrorAction SilentlyContinue
 
 if ($notPresent) {
